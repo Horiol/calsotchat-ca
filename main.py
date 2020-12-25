@@ -9,7 +9,7 @@ from flask_mail import Mail, Message
 from secrets import token_hex
 from datetime import datetime, timedelta
 
-from werkzeug.exceptions import BadRequest, NotFound
+from werkzeug.exceptions import BadRequest, Forbidden, NotFound
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from tor import Tor
@@ -107,10 +107,11 @@ class FindContactResource(Resource):
         # Check user identity
         contact = Contact.query.filter_by(
             api_token=args["api_token"]
-        ).filter_by(
-            is_active=True
         ).first_or_404()
         logging.info("User valid")
+
+        if not contact.is_active:
+            raise Forbidden("Email not confirmed")
         
         contacts = Contact.query.filter_by(
             is_active=True
