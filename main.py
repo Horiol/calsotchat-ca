@@ -31,8 +31,8 @@ app.config['MAIL_SERVER'] = 'in-v3.mailjet.com'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
-app.config['MAIL_USERNAME'] = 'abe2b0d5c606cb2602ad22a1392fea40'
-app.config['MAIL_PASSWORD'] = '98452d7c0fcd1caa143ba71b11d10cd0'
+app.config['MAIL_USERNAME'] = 'USERNAME'
+app.config['MAIL_PASSWORD'] = 'PASSWORD'
 
 salt = "my_random_  salt"
 
@@ -133,8 +133,9 @@ class ContactResource(Resource):
 
         contact = Contact.query.filter_by(onion_address=api.payload["onion_address"]).first()
         if contact:
-            # Update token
+            # Update token and email
             contact.api_token = token_hex(32)
+            contact.email = api.payload["email"]
             contact.save()
             
             if not contact.is_active:
