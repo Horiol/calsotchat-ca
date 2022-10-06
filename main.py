@@ -165,13 +165,12 @@ class ConfirmResource(Resource):
             raise BadRequest('The confirmation link is invalid or has expired.')
 
         contact = Contact.query.filter_by(id=id).first_or_404()
-        
+
         if contact.is_active:
             raise BadRequest('Account already confirmed.')
-        else:
-            contact.is_active = True
-            contact.save()
-            return {"message": 'You have confirmed your account. Thanks!'}
+        contact.is_active = True
+        contact.save()
+        return {"message": 'You have confirmed your account. Thanks!'}
         
 if __name__ == "__main__":
     tor_service = Tor()
